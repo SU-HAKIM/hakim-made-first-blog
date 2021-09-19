@@ -99,7 +99,9 @@ function Blogs() {
                           written by : {data.authorName}
                         </small>
                       </div>
-                      <p className="card-text">{data.description}</p>
+                      <p className="card-text">
+                        {data.description.substr(0, 150)}....
+                      </p>
                     </div>
                     <IconContext.Provider value={{ className: "blog-icons" }}>
                       <div className="card-footer d-flex justify-content-between">
