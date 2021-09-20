@@ -31,7 +31,7 @@ function SingleBlog() {
             <div className="mb-3">
               <h1 className="display-4">{data.title}</h1>
               <small className="text-muted">Liked By {data.liked} person</small>
-              &nbsp; => &nbsp;
+              &nbsp; =&gt; &nbsp;
               <small className="mb-5 text-muted">
                 written by : {data.authorName}
               </small>

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FileBase from "react-file-base64";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
-function CreateBlog() {
+function CreateBlog({ jwt }) {
+  console.log(jwt);
   const history = useHistory();
   const [blogData, setBlogData] = useState({
     title: "",
@@ -12,6 +13,16 @@ function CreateBlog() {
     description: "",
     image: "",
   });
+  //authentication check
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (!jwt) {
+        history.push("/login");
+      }
+    };
+    checkAuth();
+  }, [jwt, history]);
+  //authentication check
   const handleChange = (e) => {
     setBlogData({ ...blogData, [e.target.name]: e.target.value });
   };
