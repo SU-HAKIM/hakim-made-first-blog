@@ -74,7 +74,7 @@ function Blogs() {
           {result
             ? result.map((data) => (
                 <div className="col-md-6 col-lg-4" key={data._id}>
-                  <div className="card">
+                  <div className="card my-2">
                     <IconContext.Provider value={{ className: "blog-icons" }}>
                       <div className="card-header d-flex justify-content-end">
                         <AiTwotoneEdit

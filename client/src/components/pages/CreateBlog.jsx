@@ -3,8 +3,10 @@ import styled from "styled-components";
 import FileBase from "react-file-base64";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import Cookies from "js-cookie";
 
 function CreateBlog({ jwt }) {
+  const token = Cookies.get("jwt");
   console.log(jwt);
   const history = useHistory();
   const [blogData, setBlogData] = useState({
@@ -29,10 +31,21 @@ function CreateBlog({ jwt }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let response = await axios.post("/blogs", blogData);
+      let response = await axios.post("/blogs", {
+        title: blogData.title,
+        authorName: blogData.authorName,
+        image: blogData.image,
+        description: blogData.description,
+        token,
+      });
       console.log(response.data);
       e.target.reset();
-      setBlogData({ title: "", authorName: "", description: "", image: "" });
+      setBlogData({
+        title: "",
+        authorName: "",
+        description: "",
+        image: "",
+      });
       history.push("/blogs");
     } catch (error) {
       console.log(error);
