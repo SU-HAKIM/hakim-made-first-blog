@@ -14,6 +14,7 @@ function Blogs() {
   //history
   const jwt = Cookies.get("jwt");
   //cookie
+  //
   const [deletePost, setDeletePost] = useState("");
   const [likeData, setLikeData] = useState({});
   const [result, setResult] = useState([]);
@@ -72,7 +73,7 @@ function Blogs() {
   };
   const handleLike = async (id) => {
     try {
-      let response = await axios.patch(`/blogs/${id}/like`);
+      let response = await axios.patch(`/blogs/${id}/like`, { token: jwt });
       setLikeData(response.data);
       console.log(response);
     } catch (error) {
@@ -105,8 +106,10 @@ function Blogs() {
           {result
             ? result.map((data) => {
                 let authorPost;
+                let authorLiked;
                 if (author) {
                   authorPost = author.posts.includes(data._id);
+                  authorLiked = data.liked.includes(author._id);
                 }
                 return (
                   <div className="col-md-6 col-lg-4" key={data._id}>
@@ -145,12 +148,12 @@ function Blogs() {
                         <div className="card-footer d-flex justify-content-between">
                           <div>
                             <AiTwotoneLike
-                              color=""
+                              color={authorLiked ? "blue" : ""}
                               onClick={(e) => {
                                 handleLike(data._id);
                               }}
                             />{" "}
-                            {data.liked}
+                            {data.liked.length}
                           </div>
                           {authorPost && (
                             <div>
