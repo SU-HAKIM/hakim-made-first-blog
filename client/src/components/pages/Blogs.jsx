@@ -4,17 +4,48 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { IconContext } from "react-icons";
 import FileBase from "react-file-base64";
+import Cookies from "js-cookie";
+import { useHistory } from "react-router-dom";
 
 import { AiTwotoneLike, AiTwotoneDelete, AiTwotoneEdit } from "react-icons/ai";
 
 function Blogs() {
+  const history = useHistory();
+  //history
+  const jwt = Cookies.get("jwt");
+  //cookie
   const [deletePost, setDeletePost] = useState("");
   const [likeData, setLikeData] = useState({});
   const [result, setResult] = useState([]);
+  const [author, setAuthor] = useState({});
   // update logic
   const [updateData, setUpdateData] = useState({});
   const [updateId, setUpdateId] = useState("");
   const [blogData, setBlogData] = useState({});
+  //authentication check
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (!jwt) {
+        history.push("/login");
+      }
+    };
+    checkAuth();
+  }, [jwt, history]);
+  //auth check
+  //get author
+  useEffect(() => {
+    const getAuthor = async () => {
+      try {
+        const response = await axios.post("/auth/author", { token: jwt });
+        console.log(response.data, "client author");
+        setAuthor(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getAuthor();
+  }, [jwt]);
+  //get author
   const handleChange = (e) => {
     setBlogData({ ...blogData, [e.target.name]: e.target.value });
   };
@@ -66,68 +97,78 @@ function Blogs() {
   };
   useEffect(() => {
     fetchData();
-  }, [likeData, deletePost, updateData]);
+  }, [likeData, deletePost, updateData, jwt]);
   return (
     <>
       <div className="container">
         <BlogBody className="row">
           {result
-            ? result.map((data) => (
-                <div className="col-md-6 col-lg-4" key={data._id}>
-                  <div className="card my-2">
-                    <IconContext.Provider value={{ className: "blog-icons" }}>
-                      <div className="card-header d-flex justify-content-end">
-                        <AiTwotoneEdit
-                          type="button"
-                          data-bs-toggle="modal"
-                          data-bs-target="#staticBackdrop"
-                          color="green"
-                          onClick={(e) => {
-                            getData(data._id);
-                            setUpdateId(data._id);
-                          }}
-                        />
+            ? result.map((data) => {
+                let authorPost;
+                if (author) {
+                  authorPost = author.posts.includes(data._id);
+                }
+                return (
+                  <div className="col-md-6 col-lg-4" key={data._id}>
+                    <div className="card my-2">
+                      <IconContext.Provider value={{ className: "blog-icons" }}>
+                        {authorPost && (
+                          <div className="card-header d-flex justify-content-end">
+                            <AiTwotoneEdit
+                              type="button"
+                              data-bs-toggle="modal"
+                              data-bs-target="#staticBackdrop"
+                              color="green"
+                              onClick={(e) => {
+                                getData(data._id);
+                                setUpdateId(data._id);
+                              }}
+                            />
+                          </div>
+                        )}
+                      </IconContext.Provider>
+                      <img src={data.image} alt="card pic" />
+                      <div className="card-body">
+                        <div className="mb-3">
+                          <h1 className="card-title">
+                            <Link to={`/blogs/${data._id}`}>{data.title}</Link>
+                          </h1>
+                          <small className="text-muted">
+                            written by : {data.authorName}
+                          </small>
+                        </div>
+                        <p className="card-text">
+                          {data.description.substr(0, 150)}....
+                        </p>
                       </div>
-                    </IconContext.Provider>
-                    <img src={data.image} alt="card pic" />
-                    <div className="card-body">
-                      <div className="mb-3">
-                        <h1 className="card-title">
-                          <Link to={`/blogs/${data._id}`}>{data.title}</Link>
-                        </h1>
-                        <small className="text-muted">
-                          written by : {data.authorName}
-                        </small>
-                      </div>
-                      <p className="card-text">
-                        {data.description.substr(0, 150)}....
-                      </p>
+                      <IconContext.Provider value={{ className: "blog-icons" }}>
+                        <div className="card-footer d-flex justify-content-between">
+                          <div>
+                            <AiTwotoneLike
+                              color=""
+                              onClick={(e) => {
+                                handleLike(data._id);
+                              }}
+                            />{" "}
+                            {data.liked}
+                          </div>
+                          {authorPost && (
+                            <div>
+                              <AiTwotoneDelete
+                                color="red"
+                                onClick={(e) => {
+                                  handleDelete(data._id);
+                                  setDeletePost(data._id);
+                                }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </IconContext.Provider>
                     </div>
-                    <IconContext.Provider value={{ className: "blog-icons" }}>
-                      <div className="card-footer d-flex justify-content-between">
-                        <div>
-                          <AiTwotoneLike
-                            color=""
-                            onClick={(e) => {
-                              handleLike(data._id);
-                            }}
-                          />{" "}
-                          {data.liked}
-                        </div>
-                        <div>
-                          <AiTwotoneDelete
-                            color="red"
-                            onClick={(e) => {
-                              handleDelete(data._id);
-                              setDeletePost(data._id);
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </IconContext.Provider>
                   </div>
-                </div>
-              ))
+                );
+              })
             : ""}
         </BlogBody>
       </div>
