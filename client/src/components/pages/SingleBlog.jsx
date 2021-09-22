@@ -5,18 +5,20 @@ import axios from "axios";
 function SingleBlog() {
   const params = useParams();
   const [data, setData] = useState({});
-  const getData = async (e) => {
-    try {
-      let post = await axios.get(`/blogs/${params.id}`);
-      console.log(post);
-      setData(post.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   useEffect(() => {
+    const getData = async (e) => {
+      try {
+        let post = await axios.get(`/blogs/${params.id}`);
+        setData(post.data);
+        console.log(params.id);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     getData();
-  }, []);
+  }, [params.id]);
+  console.log(data);
   return (
     <div className="container">
       <div className="row pt-5">
@@ -31,7 +33,7 @@ function SingleBlog() {
             <div className="mb-3">
               <h1 className="display-4">{data.title}</h1>
               <small className="text-muted">
-                Liked By {data.liked.length} person
+                Liked By {data.liked ? data.liked.length : 0} person
               </small>
               &nbsp; =&gt; &nbsp;
               <small className="mb-5 text-muted">

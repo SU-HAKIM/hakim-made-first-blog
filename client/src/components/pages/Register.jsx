@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import FileBase from "react-file-base64";
 
 function Register() {
   const history = useHistory();
@@ -25,6 +26,7 @@ function Register() {
         email: "",
         password: "",
         confirmPassword: "",
+        image: "",
       });
       history.push("/login");
     } catch (error) {
@@ -79,6 +81,15 @@ function Register() {
                 className="form-control"
                 value={registerData.confirmPassword}
                 onChange={handleChange}
+              />
+            </div>
+            <div className="form-group my-2">
+              <FileBase
+                type="file"
+                multiple={false}
+                onDone={({ base64 }) =>
+                  setRegisterData({ ...registerData, image: base64 })
+                }
               />
             </div>
             <input

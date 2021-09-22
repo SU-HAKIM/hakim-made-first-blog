@@ -16,6 +16,12 @@ function Header({ jwt, setToken }) {
       console.log(error);
     }
   };
+  const handleProfile = async () => {
+    try {
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark py-3">
       <div className="container">
@@ -56,14 +62,25 @@ function Header({ jwt, setToken }) {
               </Link>
             </li>
             {jwt ? (
-              <li className="nav-item">
-                <button
-                  className="nav-link btn btn-primary mx-2"
-                  onClick={handleLogOut}
-                >
-                  logout
-                </button>
-              </li>
+              <div className="d-flex justify-content-center mx-2">
+                <li className="nav-item">
+                  <button
+                    className="nav-link btn btn-primary mx-2"
+                    onClick={handleLogOut}
+                  >
+                    logout
+                  </button>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    to="/user"
+                    className="nav-link btn btn-primary mx-2"
+                    onClick={handleProfile}
+                  >
+                    See Profile
+                  </Link>
+                </li>
+              </div>
             ) : (
               <div className="d-flex justify-content-center mx-2">
                 <li className="nav-item">

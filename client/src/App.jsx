@@ -11,6 +11,7 @@ import Register from "./components/pages/Register";
 import Login from "./components/pages/Login";
 import Footer from "./components/utils/Footer";
 import Cookies from "js-cookie";
+import UserProfile from "./components/pages/UserProfile";
 
 function App() {
   const [token, setToken] = useState("");
@@ -41,6 +42,7 @@ function App() {
           path="/login"
           component={() => <Login setToken={setToken} />}
         />
+        <Route exact path="/user" component={() => <UserProfile jwt={jwt} />} />
         <Route component={NotFound} />
       </Switch>
       <Footer />
