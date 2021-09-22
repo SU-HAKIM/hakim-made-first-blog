@@ -1,7 +1,14 @@
 import React from "react";
 
 function About() {
-  return <div>About me</div>;
+  return (
+    <div className="container">
+      <div className="row about">
+        <div className="col-md-6"></div>
+        <div className="col-md-6"></div>
+      </div>
+    </div>
+  );
 }
 
 export default About;

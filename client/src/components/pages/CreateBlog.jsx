@@ -87,6 +87,7 @@ function CreateBlog({ jwt }) {
                 className="form-control"
                 value={blogData.description}
                 onChange={handleChange}
+                rows={7}
               ></textarea>
               <div className="form-group my-2">
                 <FileBase
